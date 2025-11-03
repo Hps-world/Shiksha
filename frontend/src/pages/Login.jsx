@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { auth } from "../firebase";
+import { auth, db } from "../firebase";
 import {
   signInWithEmailAndPassword,
   GoogleAuthProvider,
   signInWithPopup,
 } from "firebase/auth";
+import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
 
 export default function Login() {
@@ -16,7 +17,25 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Check if user exists in Firestore
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      // If not found, create a new record
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          name: user.displayName || "New User",
+          email: user.email,
+          role: "student",
+          profileImage: user.photoURL || "",
+          enrolledCourses: [],
+          createdAt: serverTimestamp(),
+        });
+      }
+
       alert("Login successful ✅");
       navigate("/dashboard");
     } catch (err) {
@@ -28,7 +47,25 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     try {
       const provider = new GoogleAuthProvider();
-      await signInWithPopup(auth, provider);
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      // Create or update user record in Firestore
+      const userRef = doc(db, "users", user.uid);
+      const userSnap = await getDoc(userRef);
+
+      if (!userSnap.exists()) {
+        await setDoc(userRef, {
+          name: user.displayName || "Google User",
+          email: user.email,
+          role: "student",
+          profileImage: user.photoURL || "",
+          enrolledCourses: [],
+          createdAt: serverTimestamp(),
+        });
+      }
+
+      alert(`Welcome back, ${user.displayName || "User"}!`);
       navigate("/dashboard");
     } catch (err) {
       alert(err.message);
@@ -48,7 +85,7 @@ export default function Login() {
             login form. Effortlessly access your account.
           </p>
           <p className="text-[15px] mt-6 lg:mt-12 text-slate-600">
-            Don't have an account?
+            Don’t have an account?
             <Link to="/signup" className="text-blue-600 font-medium hover:underline ml-1">
               Register here
             </Link>
@@ -143,17 +180,6 @@ export default function Login() {
                 <path fill="#0f9d58" d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z" />
                 <path fill="#3c79e6" d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z" />
                 <path fill="#eb4132" d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z" />
-              </svg>
-            </button>
-
-            {/* Facebook */}
-            <button
-              type="button"
-              title="Login with Facebook"
-              className="cursor-pointer"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" viewBox="0 0 512 512">
-                <path fill="#1877f2" d="M512 256c0 127.78-93.62 233.69-216 252.89V330h59.65L367 256h-71v-48.02c0-20.25 9.92-39.98 41.72-39.98H370v-63s-29.3-5-57.31-5c-58.47 0-96.69 35.44-96.69 99.6V256h-65v74h65v178.89C93.62 489.69 0 383.78 0 256 0 114.62 114.62 0 256 0s256 114.62 256 256z" />
               </svg>
             </button>
           </div>

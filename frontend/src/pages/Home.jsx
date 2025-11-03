@@ -1,5 +1,7 @@
 import Hero from "../components/Hero";
 import CourseCard from "../components/CourseCard";
+import Navbar from "../components/NavBar";
+import EducatorLogin from "./EducatorLogin";
 
 export default function Home() {
   const courses = [
@@ -22,7 +24,9 @@ export default function Home() {
 
   return (
     <>
+      <Navbar/>
       <Hero />
+      
       <section className="py-20 px-6 md:px-20 bg-gray-50">
         <h2 className="text-3xl font-bold mb-10 text-center text-gray-800">
           Explore Popular Courses

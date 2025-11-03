@@ -9,6 +9,9 @@ export default function Navbar() {
         <li><Link to="/courses">Courses</Link></li>
         <li><Link to="/dashboard">My Learning</Link></li>
         <li><Link to="/login">Login</Link></li>
+        <li><Link to="/educator-login">Login Educator</Link></li>
+        
+        
       </ul>
       <button className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 hidden md:block">
         Join for Free
