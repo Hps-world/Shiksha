@@ -1,0 +1,8 @@
+[
+  {
+    "origin": ["http://localhost:5173", "https://your-deployed-domain.web.app", "https://online-learning-shiksha.firebaseapp.com"],
+    "method": ["GET", "POST", "PUT", "DELETE", "HEAD"],
+    "maxAgeSeconds": 3600,
+    "responseHeader": ["Content-Type", "x-goog-meta-*"]
+  }
+]

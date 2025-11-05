@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { auth, db } from "../firebase";
 import {
   signInWithEmailAndPassword,
@@ -7,8 +7,10 @@ import {
 } from "firebase/auth";
 import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useNavigate, Link } from "react-router-dom";
+const api_url = "https://type.fit/api/quotes";
 
 export default function Login() {
+  
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
@@ -17,7 +19,11 @@ export default function Login() {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
       const user = userCredential.user;
 
       // Check if user exists in Firestore
@@ -78,22 +84,38 @@ export default function Login() {
         {/* Left Side: Text */}
         <div>
           <h1 className="lg:text-5xl text-4xl font-bold text-slate-900 leading-tight">
-            Seamless Login for Exclusive Access
+            Welcome to Shiksha Learning
           </h1>
           <p className="text-[15px] mt-6 text-slate-600 leading-relaxed">
-            Immerse yourself in a hassle-free login journey with our intuitively designed
-            login form. Effortlessly access your account.
+            “Shiksha – Smart Learning for a Smart Generation.”
+            <br />
+            “Transforming Education through Innovation.”
+            <br />
+            “Digital Learning. Real Growth.”
+            <br />
+            “Shiksha – Redefining the Way You Learn.”
+            <br />
+            “From Clicks to Concepts – Shiksha Delivers Learning.”
+            <br />
+            
           </p>
+
           <p className="text-[15px] mt-6 lg:mt-12 text-slate-600">
             Don’t have an account?
-            <Link to="/signup" className="text-blue-600 font-medium hover:underline ml-1">
+            <Link
+              to="/signup"
+              className="text-blue-600 font-medium hover:underline ml-1"
+            >
               Register here
             </Link>
           </p>
         </div>
 
         {/* Right Side: Form */}
-        <form onSubmit={handleLogin} className="max-w-md lg:ml-auto w-full bg-white p-8 rounded-2xl shadow-md">
+        <form
+          onSubmit={handleLogin}
+          className="max-w-md lg:ml-auto w-full bg-white p-8 rounded-2xl shadow-md"
+        >
           <h2 className="text-slate-900 text-3xl font-semibold mb-8 text-center">
             Sign In
           </h2>
@@ -137,12 +159,18 @@ export default function Login() {
                   type="checkbox"
                   className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-slate-300 rounded"
                 />
-                <label htmlFor="remember-me" className="ml-3 block text-sm text-slate-900">
+                <label
+                  htmlFor="remember-me"
+                  className="ml-3 block text-sm text-slate-900"
+                >
                   Remember me
                 </label>
               </div>
               <div className="text-sm">
-                <a href="#" className="text-blue-600 hover:text-blue-500 font-medium">
+                <a
+                  href="#"
+                  className="text-blue-600 hover:text-blue-500 font-medium"
+                >
                   Forgot your password?
                 </a>
               </div>
@@ -175,11 +203,27 @@ export default function Login() {
               title="Login with Google"
               className="cursor-pointer"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" className="w-7 h-7" viewBox="0 0 512 512">
-                <path fill="#fbbd00" d="M120 256c0-25.367 6.989-49.13 19.131-69.477v-86.308H52.823C18.568 144.703 0 198.922 0 256s18.568 111.297 52.823 155.785h86.308v-86.308C126.989 305.13 120 281.367 120 256z" />
-                <path fill="#0f9d58" d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z" />
-                <path fill="#3c79e6" d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z" />
-                <path fill="#eb4132" d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z" />
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="w-7 h-7"
+                viewBox="0 0 512 512"
+              >
+                <path
+                  fill="#fbbd00"
+                  d="M120 256c0-25.367 6.989-49.13 19.131-69.477v-86.308H52.823C18.568 144.703 0 198.922 0 256s18.568 111.297 52.823 155.785h86.308v-86.308C126.989 305.13 120 281.367 120 256z"
+                />
+                <path
+                  fill="#0f9d58"
+                  d="m256 392-60 60 60 60c57.079 0 111.297-18.568 155.785-52.823v-86.216h-86.216C305.044 385.147 281.181 392 256 392z"
+                />
+                <path
+                  fill="#3c79e6"
+                  d="M512 256a258.24 258.24 0 0 0-4.192-46.377l-2.251-12.299H256v120h121.452a135.385 135.385 0 0 1-51.884 55.638l86.216 86.216a260.085 260.085 0 0 0 25.235-22.158C485.371 388.667 512 324.38 512 256z"
+                />
+                <path
+                  fill="#eb4132"
+                  d="M256 120V0C187.62 0 123.333 26.629 74.98 74.98a259.849 259.849 0 0 0-22.158 25.235l86.308 86.308C162.883 146.72 206.376 120 256 120z"
+                />
               </svg>
             </button>
           </div>
